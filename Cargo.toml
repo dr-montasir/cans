@@ -1,0 +1,18 @@
+[package]
+name = "cans"
+version = "0.0.0"
+authors = ["Montasir Mirghani <contact@montasir.me>"]
+edition = "2021"
+description = "Cans"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/dr-montasir/cans"
+repository = "https://github.com/dr-montasir/cans"
+readme = "README.md"
+keywords = ["html", "json", "text", "template"]
+categories = ["template-engine", "parser-implementations", "web-programming"]
+
+[dependencies]
+
+[lib]
+name = "cans"
+path = "src/lib.rs"
