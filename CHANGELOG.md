@@ -1,3 +1,7 @@
+### v0.2.0
+
+- Improved Documentation
+
 ### v0.1.1
 
 - Improved Documentation
