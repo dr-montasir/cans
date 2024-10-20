@@ -1,3 +1,7 @@
+### v0.1.1
+
+- Improved Documentation
+
 ### v0.1.0
 
 - Added html module

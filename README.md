@@ -26,7 +26,7 @@ While **CANS** is optimized for seamless integration with the [GetPost](https://
 Run the following Cargo command in your project directory:
 
 ```shell
-cargo add mathlab
+cargo add cans
 ```
 
 or add `cans` to your `Cargo.toml` file:
