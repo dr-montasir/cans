@@ -1,3 +1,7 @@
+### v0.4.0
+
+- Added mime module
+
 ### v0.3.0
 
 - Deleted [bin] main.rs
