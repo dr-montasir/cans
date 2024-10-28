@@ -1,3 +1,7 @@
+### v0.5.0
+
+- Improved Documentation
+
 ### v0.4.0
 
 - Added mime module

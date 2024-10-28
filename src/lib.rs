@@ -1,5 +1,5 @@
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/dr-montasir/cans/5bb110712e96d0c43868956e235c717105adbd97/cans-logo.svg",
+    html_logo_url = "https://github.com/dr-montasir/cans/raw/HEAD/cans-logo.svg?sanitize=true",
     html_root_url = "https://docs.rs/cans/latest/cans"
 )]
 
