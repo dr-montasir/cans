@@ -1,16 +1,33 @@
 # CANS <img src="cans-logo.svg" alt="CANS logo" height="100" align="center" />
 
-<small><b>An Elegant Rust-based Literal Template Engine</b></small>
+<small><b>An elegant and lightweight Rust-based literal template engine.</b></small>
 
 ---
 
 [<img alt="github" src="https://img.shields.io/badge/github-dr%20montasir%20/%20cans-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="22">](https://github.com/dr-montasir/cans)[<img alt="crates.io" src="https://img.shields.io/crates/v/cans.svg?style=for-the-badge&color=fc8d62&logo=rust" height="22">](https://crates.io/crates/cans)[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-cans-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="22">](https://docs.rs/cans)[<img alt="license" src="https://img.shields.io/badge/license-apache_2.0-4a98f7.svg?style=for-the-badge&labelColor=555555&logo=apache" height="22">](https://choosealicense.com/licenses/apache-2.0)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Changelog](#changelog)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Documentation](#documentation)
+- [License](#license)
+- [Contributing](#contributing)
+- [Donations](#donations)
+- [Author](#author)
 
 ## Overview
 
 The **CANS** templating engine is an elegant and efficient solution developed in Rust, designed for developers who prioritize simplicity and type safety. This crate allows you to create dynamic web pages and applications with minimal boilerplate code, ensuring that your templates are easy to read and maintain.
 
 While **CANS** is optimized for seamless integration with the [GetPost](https://crates.io/crates/getpost) framework, it also provides the flexibility to work with any framework or content type, making it a versatile choice for a wide range of projects.
+
+## Changelog
+
+[![github](https://img.shields.io/badge/github-%20changelog-8da0cb?style=for-the-badge&labelColor=555555&logo=github)](https://github.com/dr-montasir/cans/blob/main/CHANGELOG.md)
 
 ## Features
 
@@ -19,9 +36,7 @@ While **CANS** is optimized for seamless integration with the [GetPost](https://
 - **Dynamic Content**: Supports dynamic insertion of values, loops, and conditionals.
 - **Integration**: Works seamlessly with various web frameworks.
 
-## Getting Started
-
-### Installation
+## Installation
 
 Run the following Cargo command in your project directory:
 
@@ -38,7 +53,7 @@ cans = "MAJOR.MINOR.PATCH" # Replace with the latest version
 
 ## Usage
 
-1. ### CANS Template and HTML
+### Template
 
 CANS provides robust support for templating, including support for handling HTML, looping through collections, and rendering text. Below are some examples demonstrating how to use the `do_html` macro, the `do_forloop` macro, and the `do_text` function.
 
@@ -148,154 +163,6 @@ fn main() {
 }
 ```
 
-2. ### CANS Template and JSON (Parsing and Handling Examples)
-
-CANS provides robust support for handling JSON-like structures. Below are some examples demonstrating how to use the `ParseJson` struct and the `do_json!` macro.
-
-### Example 1: Creating and Setting Attributes
-
-You can create a new `ParseJson` instance and set attributes using JSON-like syntax.
-
-```rust
-use cans::json::ParseJson;
-
-fn main() {
-    let mut parser = ParseJson::new();
-
-    // Set attributes from a JSON string
-    parser.set_all(r#"{ "key1": 42, "key2": "hello", "key3": true }"#);
-
-    // Retrieve and print attributes
-    parser.print_all();
-}
-```
-
-**Output:**
-
-```shell
-key1: 42
-key2: hello
-key3: true
-```
-
-### Example 2: Getting Attributes
-
-You can retrieve attributes by their keys and check the type.
-
-```rust
-use cans::json::ParseJson;
-
-fn main() {
-    let mut parser = ParseJson::new();
-    parser.set_all(r#"{ "key1": 42, "key2": "hello" }"#);
-
-    if let Some(value) = parser.get::<u32>("key1") {
-        println!("Found key1: {}", value);
-    } else {
-        println!("key1 not found.");
-    }
-}
-```
-
-**Output:**
-
-```shell
-Found key1: 42
-```
-
-### Example 3: Updating Attributes
-
-You can update existing attributes using a `HashMap`.
-
-```rust
-use std::any::Any;
-use std::collections::HashMap;
-use cans::json::ParseJson;
-
-fn main() {
-    let mut parser = ParseJson::new();
-    parser.set("key1".to_string(), 42);
-
-    // Create an update with a new value
-    let mut updates = HashMap::new();
-    updates.insert("key1".to_string(), Box::new(100u32) as Box<dyn Any>);
-
-    parser.patch(updates);
-    parser.print("key1"); // Should print the updated value
-}
-```
-
-**Output:**
-
-```shell
-key1: 100
-```
-
-### Example 4: Using the `do_json` Macro
-
-The `do_json!` macro allows you to easily generate JSON strings with placeholders.
-
-```rust
-fn main() {
-    let name = "Mido";
-    let age = 30;
-    let is_member = true;
-
-    // Creating a JSON string from the given parameters
-    let json_string = do_json!(
-        r#"{"name": "{{name}}", "age": {{age}}, "is_member": {{is_member}}}"#,
-        name = name,
-        age = age,
-        is_member = is_member
-    );
-
-    // Display the generated JSON string
-    println!("Generated JSON: {}", json_string);
-
-    // Wrap the JSON string in raw string syntax for clarity
-    let json_profile = format!("r#{}#", json_string);
-
-    // The json_profile variable now holds the JSON data formatted as a Rust raw string.
-    println!("JSON Profile (in raw string format): {}", json_profile);
-    // This format preserves the original JSON structure and makes it easier to use in Rust code
-    // without needing to escape quotes and special characters.
-}
-```
-
-**Output:**
-
-```shell
-Generated JSON: {"name": ""Mido"", "age": 30, "is_member": true}
-JSON Profile (in raw string format): r#{"name": ""Mido"", "age": 30, "is_member": true}#
-```
-
-### Example 5: Creating JSON Arrays
-
-You can also create JSON arrays using the macro.
-
-```rust
-use cans::do_json;
-
-fn main() {
-    let items = vec!["Rust", "C++", "Matlab", "Python", "Go", "JavaScript"];
-
-    let json_array = do_json!(&items);
-    println!("{}", json_array);
-
-    let hobbies = vec!["reading", "archery", "hiking"];
-    let json_hobbies = do_json!(r#"{ "hobbies": {{hobbies}} }"#, hobbies = &hobbies);
-    println!("{}", json_hobbies);
-}
-```
-
-**Output:**
-
-```shell
-["Rust", "C++", "Matlab", "Python", "Go", "JavaScript"]
-
-{ "hobbies": ["reading", "archery", "hiking"] }
-```
-
 ## Documentation
 
 For a detailed API reference, visit the [CANS Documentation](https://docs.rs/cans/latest/cans).
@@ -332,14 +199,6 @@ Thank you for your support!
 
 ---
 
-### README Structure
+## Author
 
-- **Overview**
-- **Features**
-- **Getting Started**
-- **Examples**
-- **Documentation**
-- **Contributing**
-- **License**
-- **Conclusion**
-- **Donations**
+[Dr. Montasir Mirghani](https://github.com/dr-montasir)

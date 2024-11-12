@@ -1,3 +1,9 @@
+### v0.6.0
+
+- Removed the json module. (Starting from version 0.6.0, Cans will not provide functionality for JSON; instead, you can use the `serde` and `serde_json` crates.)
+- Optimized cans crate
+- Improved the documentation
+
 ### v0.5.0
 
 - Improved Documentation

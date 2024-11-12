@@ -8,11 +8,6 @@
 /// A set of functions and macros for generating and manipulating HTML content.
 pub mod html;
 
-/// ### JSON Module
-///
-/// A module for parsing and managing JSON-like key-value pairs.
-pub mod json;
-
 /// ### Mime Module
 ///
 /// A set of functions for managing MIME types using a HashMap.
