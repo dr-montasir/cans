@@ -1,10 +1,16 @@
-# CANS <img src="cans-logo.svg" alt="CANS logo" height="100" align="center" />
-
-<small><b>An elegant and lightweight Rust-based literal template engine.</b></small>
-
----
+<div align="center">
+  <br>
+  <a href="https://github.com/dr-montasir/cans">
+      <img src="cans-logo.svg" width="100">
+  </a>
+  <br>
 
 [<img alt="github" src="https://img.shields.io/badge/github-dr%20montasir%20/%20cans-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="22">](https://github.com/dr-montasir/cans)[<img alt="crates.io" src="https://img.shields.io/crates/v/cans.svg?style=for-the-badge&color=fc8d62&logo=rust" height="22">](https://crates.io/crates/cans)[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-cans-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="22">](https://docs.rs/cans)[<img alt="license" src="https://img.shields.io/badge/license-apache_2.0-4a98f7.svg?style=for-the-badge&labelColor=555555&logo=apache" height="22">](https://choosealicense.com/licenses/apache-2.0)
+
+  <h1>CANS</h1>
+
+  <p>An elegant and lightweight Rust-based literal template engine</p>
+</div>
 
 ## Table of Contents
 

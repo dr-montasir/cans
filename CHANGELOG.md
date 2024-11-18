@@ -1,3 +1,7 @@
+### v0.7.0
+
+- Added world module
+
 ### v0.6.0
 
 - Removed the json module. (Starting from version 0.6.0, Cans will not provide functionality for JSON; instead, you can use the `serde` and `serde_json` crates.)

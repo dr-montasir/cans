@@ -15,5 +15,11 @@ pub mod mime;
 
 /// ### Rules Module
 ///
-/// A module that encapsulates the rules and functionalities of the `do_html` and `do_json` macros.
+/// A module that encapsulates the rules and functionalities of the `do_html` macro.
 pub mod rules;
+
+// ### World Module
+///
+/// A module that encapsulates the management of country details, including
+/// functionalities for inserting, deleting, retrieving, and sorting countries.
+pub mod world;
