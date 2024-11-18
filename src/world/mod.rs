@@ -11,12 +11,12 @@ use std::collections::HashMap;
 /// println!("Current Data: {:?}", country_manager.retrieve());
 ///
 /// // Insert a new country using Vec<&str>
-/// country_manager.insert_one("FR", vec!["🇫🇷", "33", "France", "EUR"]);
+/// country_manager.insert_one("FR", vec!["🇫🇷", "33", "France", "EUR", "Paris"]);
 ///
 /// // Insert multiple countries using Vec<&str>
 /// country_manager.insert_many(vec![
-///     ("IT", vec!["🇮🇹", "39", "Italy", "EUR"]),
-///     ("DE", vec!["🇩🇪", "49", "Germany", "EUR"]),
+///     ("IT", vec!["🇮🇹", "39", "Italy", "EUR", "Rome"]),
+///     ("DE", vec!["🇩🇪", "49", "Germany", "EUR", "Berlin"]),
 /// ]);
 ///
 /// println!("After Insertions: {:?}", country_manager.retrieve());
@@ -43,6 +43,7 @@ pub struct Details {
     pub code: String,     // International dialing code
     pub name: String,     // Name of the country
     pub currency: String, // Currency used in the country
+    pub capital: String,  // Capital of the country
 }
 
 /// Struct to manage a collection of countries.
@@ -65,17 +66,17 @@ impl Country {
 
         // Example entries
         let entries = [
-            ("BH", "🇧🇭", "973", "Bahrain", "BHD"),
-            ("CA", "🇨🇦", "1", "Canada", "CAD"),
-            ("DZ", "🇩🇿", "213", "Algeria", "DZD"),
-            ("SA", "🇸🇦", "966", "Saudi Arabia", "SAR"),
-            ("SD", "🇸🇩", "249", "Sudan", "SDG"),
-            ("GB", "🇬🇧", "44", "United Kingdom", "GBP"),
-            ("UK", "🇬🇧", "44", "United Kingdom", "GBP"),
-            ("US", "🇺🇸", "1", "United States", "USD"),
+            ("BH", "🇧🇭", "973", "Bahrain", "BHD", "Manama"),
+            ("CA", "🇨🇦", "1", "Canada", "CAD", "Ottawa"),
+            ("DZ", "🇩🇿", "213", "Algeria", "DZD", "Algiers"),
+            ("SA", "🇸🇦", "966", "Saudi Arabia", "SAR", "Riyadh"),
+            ("SD", "🇸🇩", "249", "Sudan", "SDG", "Khartoum"),
+            ("GB", "🇬🇧", "44", "United Kingdom", "GBP", "London"),
+            ("UK", "🇬🇧", "44", "United Kingdom", "GBP", "London"),
+            ("US", "🇺🇸", "1", "United States", "USD", "Washington, D.C."),
         ];
 
-        for &(short_name, flag, code, country_name, currency) in &entries {
+        for &(short_name, flag, code, country_name, currency, capital) in &entries {
             data.insert(
                 short_name.to_string(),
                 Details {
@@ -83,6 +84,7 @@ impl Country {
                     code: code.to_string(),
                     name: country_name.to_string(),
                     currency: currency.to_string(),
+                    capital: capital.to_string(),
                 },
             );
         }
@@ -95,14 +97,14 @@ impl Country {
     /// # Arguments
     ///
     /// * `short_name` - A string slice that holds the short name of the country.
-    /// * `details` - A vector containing details of the country: [flag, code, name, currency].
+    /// * `details` - A vector containing details of the country: [flag, code, name, currency, capital].
     ///
     /// # Examples
     ///
     /// ```
     /// use cans::world::Country;
     /// let mut country_manager = Country::new();
-    /// country_manager.insert_one("FR", vec!["🇫🇷", "33", "France", "EUR"]);
+    /// country_manager.insert_one("FR", vec!["🇫🇷", "33", "France", "EUR", "Paris"]);
     /// assert_eq!(country_manager.retrieve().len(), 9); // Check if the country was added
     /// ```
     pub fn insert_one(&mut self, short_name: &str, details: Vec<&str>) {
@@ -111,6 +113,7 @@ impl Country {
             code: details[1].to_string(),
             name: details[2].to_string(),
             currency: details[3].to_string(),
+            capital: details[4].to_string(),
         };
         self.data.insert(short_name.to_string(), details_struct);
     }
@@ -128,8 +131,8 @@ impl Country {
     /// use cans::world::Country;
     /// let mut country_manager = Country::new();
     /// country_manager.insert_many(vec![
-    ///     ("IT", vec!["🇮🇹", "39", "Italy", "EUR"]),
-    ///     ("DE", vec!["🇩🇪", "49", "Germany", "EUR"]),
+    ///     ("IT", vec!["🇮🇹", "39", "Italy", "EUR", "Rome"]),
+    ///     ("DE", vec!["🇩🇪", "49", "Germany", "EUR", "Berlin"]),
     /// ]);
     /// assert_eq!(country_manager.retrieve().len(), 10); // Check if both countries were added
     /// ```
@@ -247,5 +250,72 @@ impl Country {
         });
 
         sorted
+    }
+}
+
+// Retrieves individual country details based on a specific key.
+///
+/// # Parameters
+/// - country_code: A string slice containing the 2-letter country code (e.g., "US", "FR").
+/// - key: A string slice specifying which detail to retrieve.
+///          Possible values are "flag", "code", "name", and "currency", "capital".
+///
+/// # Returns
+/// Returns a String representation of the requested detail. If the country_code
+/// does not exist or if an invalid key is provided, an empty string is returned.
+///
+/// # Example
+///
+/// let flag = country_detail("US", "flag");  // Returns the flag emoji for the United States
+/// let name = country_detail("US", "name");  // Returns "United States"
+/// let invalid = country_detail("US", "invalid_key");  // Returns an empty string
+///
+pub fn country_detail(country_code: &str, key: &str) -> String {
+    let ct = Country::new();
+
+    // Create a binding for the details
+    let details = ct.retrieve().get(country_code);
+
+    match details {
+        Some(detail) => match key {
+            "flag" => detail.flag.clone(),         // Return flag
+            "code" => detail.code.clone(),         // Return code
+            "name" => detail.name.clone(),         // Return name
+            "currency" => detail.currency.clone(), // Return currency
+            "capital" => detail.capital.clone(),   // Return capital
+            _ => String::new(),                    // Return an empty string for an invalid key
+        },
+        None => String::new(), // Return an empty string if the country code is not found
+    }
+}
+
+/// Retrieves country details as a JSON object in string format.
+///
+/// # Parameters
+/// - country_code: A string slice containing the 2-letter country code (e.g., "US", "FR").
+///
+/// # Returns
+/// Returns a String that is a JSON representation of the country's details. If the
+/// country_code does not exist, the returned string will contain empty values for
+/// all fields: { "flag": "", "code": "", "name": "", "currency": "", "capital": "" }.
+///
+/// # Example
+///
+/// let details = country_details("US");  // Returns a JSON string with details of the United States
+/// let invalid_details = country_details("XYZ");  // Returns a JSON string with empty details
+///
+pub fn country_details(country_code: &str) -> String {
+    let ct = Country::new();
+
+    // Create a binding for the details
+    if let Some(detail) = ct.retrieve().get(country_code) {
+        // Return a JSON string with all the details
+        format!(
+            "{{ \"flag\": \"{}\", \"code\": \"{}\", \"name\": \"{}\", \"currency\": \"{}\", \"capital\": \"{}\" }}",
+            detail.flag, detail.code, detail.name, detail.currency, detail.capital
+        )
+    } else {
+        // Return a JSON string with empty strings for not found
+        String::from("{ \"flag\": \"\", \"code\": \"\", \"name\": \"\", \"currency\": \"\", \"capital\": \"\" }")
     }
 }

@@ -169,6 +169,43 @@ fn main() {
 }
 ```
 
+### World Module
+
+A module that encapsulates the management of country details, including functionalities for inserting, deleting, retrieving, and sorting countries.
+
+#### Example of getting the value using country details
+
+```rust
+use cans::world::{country_detail, country_details};
+
+fn main() {
+    let country_code = "US";
+    
+    // Example of getting the flag using country_detail
+    let flag = country_detail(country_code, "flag");
+    println!("Flag: {}", flag);  // Will print the flag for the US
+
+    // Example of getting the name using country_detail
+    let name = country_detail(country_code, "name");
+    println!("Country Name: {}", name);  // Will print the Country name
+
+    // Example of using invalid key (this will return an empty string)
+    let invalid = country_detail(country_code, "invalid_key");
+    println!("Invalid Key Value: '{}'", invalid);  // Will print an empty string
+
+    // Example of getting all details using country_details as a JSON string
+    let details = country_details(country_code);
+    println!("Country Details: {}", details);  // Print all details for the US in JSON format
+
+    // Fetching a country not in the database
+    let invalid_country_code = "XYZ";
+    let invalid_details = country_details(invalid_country_code);
+    println!("Invalid Country Details: {}", invalid_details);  // Will print empty details in JSON format
+}
+```
+
+
+
 ## Documentation
 
 For a detailed API reference, visit the [CANS Documentation](https://docs.rs/cans/latest/cans).

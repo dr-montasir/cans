@@ -1,6 +1,13 @@
+### v0.8.0
+
+- Optimized the world module
+- Added the country_detail function
+- Added the country_details function
+- Improved the documentation
+
 ### v0.7.0
 
-- Added world module
+- Added the world module
 
 ### v0.6.0
 
