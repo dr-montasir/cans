@@ -914,6 +914,16 @@ impl<'a> Country<'a> {
 
     /// Deletes a single country from the collection by its short name.
     ///
+    /// The delete_one function plays a crucial role in managing the collection of countries by
+    /// allowing for the removal of a specific entry. This is particularly useful for cases when
+    /// a country needs to be updated, removed, or is no longer relevant in the dataset.
+    /// Maintaining the integrity of the data is essential, and this function facilitates that
+    /// by enabling precise control over the entries in the collection.
+    ///
+    /// This function contributes to data management in the following ways:
+    /// - Data Integrity: It helps to keep the dataset accurate by allowing the removal of outdated or irrelevant entries.
+    /// - Dynamic Management: Adapting the dataset according to user actions or business logic becomes straightforward.
+    ///
     /// # Arguments
     ///
     /// * `short_name` - A string slice that holds the short name of the country to delete.
@@ -930,7 +940,25 @@ impl<'a> Country<'a> {
         self.data.remove(short_name);
     }
 
-    /// Deletes multiple countries from the collection.
+    /// Deletes multiple countries from the collection based on an array of short names.
+    ///
+    /// The delete_many function allows for the efficient and grouped removal of multiple entries from
+    /// the collection of countries. This is particularly useful when users need to remove several
+    /// countries in a single operation, thus enhancing performance and minimizing potential errors
+    /// associated with multiple single deletions.
+    ///
+    /// This function contributes to data management in the following ways:
+    /// - Batch Operations: By allowing the deletion of multiple entries at once, it reduces the overhead
+    ///   of individual remove operations, making it more efficient for large data sets.
+    /// - Simplified Maintenance: Users can keep their dataset tidy by removing non-relevant countries
+    ///   in one action rather than iterating through each entry.
+    /// - Consistency: It helps ensure that related entries can be uniformly handled, maintaining the
+    ///   integrity and relevance of the dataset.
+    ///
+    /// # Arguments
+    ///
+    /// * `short_names` - A slice of string slices, where each element holds the short name of a country
+    ///   to delete from the collection.
     ///
     /// # Examples
     ///
@@ -947,6 +975,15 @@ impl<'a> Country<'a> {
     }
 
     /// Deletes all countries from the collection.
+    ///
+    /// The delete_all function is designed to clear the entire collection of countries, providing
+    /// a fresh start for data entry and mock data testing. This function is beneficial in scenarios
+    /// such as resetting the dataset entirely to accommodate new mock data or simplifying testing
+    /// processes by allowing developers to quickly restore the state of the country manager without
+    /// needing to remove each entry individually. By executing this function, users can ensure
+    /// they start anew with an empty dataset, facilitating accurate mock data introduction and promoting
+    /// efficient memory management, which reduces the likelihood of processing outdated entries.
+    /// This approach helps maintain the integrity and relevance of the dataset.
     ///
     /// # Examples
     ///

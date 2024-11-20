@@ -3,6 +3,10 @@
     html_root_url = "https://docs.rs/cans/latest/cans"
 )]
 
+/// An elegant and lightweight Rust-based literal template engine for managing web content,
+/// enhanced with a world module for streamlined regional and city information,
+/// as well as robust MIME type management.
+///
 /// ### HTML Module
 ///
 /// A set of functions and macros for generating and manipulating HTML content.
@@ -20,6 +24,9 @@ pub mod rules;
 
 // ### World Module
 ///
-/// A module that encapsulates the management of country details, including
-/// functionalities for inserting, deleting, retrieving, and sorting countries.
+/// A module that encapsulates managing country details, including insertion, deletion, retrieval, and sorting.
+/// It enables dynamic management of a collection of countries and their associated cities.
+/// Users can efficiently reset the dataset to accommodate new data for testing purposes.
+/// The module promotes data integrity and optimal memory management through precise control over entries.
+/// It allows for easy querying and manipulation of country and city information to support various applications.
 pub mod world;

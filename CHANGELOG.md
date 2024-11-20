@@ -1,3 +1,9 @@
+### v1.0.0
+
+- Added a tests module to improve unit testing and coverage.
+- Introduced a CI workflow using GitHub Actions (ci.yaml) for automated testing.
+- Improved the documentation
+
 ### v0.9.0
 
 - Optimized the world module
