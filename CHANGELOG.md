@@ -1,3 +1,9 @@
+### v0.9.0
+
+- Optimized the world module
+- Completed the World Module, which includes functionalities for managing country details and city information, such as inserting, deleting, retrieving, and sorting both countries and cities.
+- Improved the documentation
+
 ### v0.8.0
 
 - Optimized the world module

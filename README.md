@@ -171,40 +171,264 @@ fn main() {
 
 ### World Module
 
-A module that encapsulates the management of country details, including functionalities for inserting, deleting, retrieving, and sorting countries.
+A module that encapsulates the management of country details, including functionalities for inserting, deleting, retrieving, and sorting countries. Additionally, it provides features for managing city information within those countries, enabling users to insert, delete, retrieve, and sort city details. This comprehensive management system allows for seamless interaction between countries and their respective cities, facilitating efficient access to geographical and administrative data.
 
-#### Example of getting the value using country details
+#### Complete example of using the world module
 
 ```rust
-use cans::world::{country_detail, country_details};
+use cans::world::{City, Country};
 
 fn main() {
-    let country_code = "US";
-    
-    // Example of getting the flag using country_detail
-    let flag = country_detail(country_code, "flag");
-    println!("Flag: {}", flag);  // Will print the flag for the US
+    // Create the country manager instance
+    let mut cm = Country::new();
 
-    // Example of getting the name using country_detail
-    let name = country_detail(country_code, "name");
-    println!("Country Name: {}", name);  // Will print the Country name
+    // Example of retrieving all countries
+    println!("Current Countries: {:?}", cm.retrieve());
 
-    // Example of using invalid key (this will return an empty string)
-    let invalid = country_detail(country_code, "invalid_key");
-    println!("Invalid Key Value: '{}'", invalid);  // Will print an empty string
+    // Inserting a new country with cities
+    cm.insert_one(
+        "FR",
+        vec!["🇫🇷", "33", "France", "EUR", "Paris"],
+        vec![
+            City {
+                name: "Paris",
+                gmt: vec!["GMT+1", "GMT+2"],
+                latitude: "48.8566",
+                longitude: "2.3522",
+                altitude: "35",
+            },
+            City {
+                name: "Lyon",
+                gmt: vec!["GMT+1", "GMT+2"],
+                latitude: "45.763420",
+                longitude: "4.834277",
+                altitude: "105",
+            },
+        ],
+    );
+    println!("After Inserting FR: {:?}", cm.retrieve());
 
-    // Example of getting all details using country_details as a JSON string
-    let details = country_details(country_code);
-    println!("Country Details: {}", details);  // Print all details for the US in JSON format
+    // Inserting multiple countries at once
+    let new_countries = vec![
+        (
+            "IT",
+            vec!["🇮🇹", "39", "Italy", "EUR", "Rome"],
+            vec![
+                City {
+                    name: "Rome",
+                    gmt: vec!["GMT+1", "GMT+2"],
+                    latitude: "41.9028",
+                    longitude: "12.49637",
+                    altitude: "21",
+                },
+                City {
+                    name: "Milan",
+                    gmt: vec!["GMT+1", "GMT+2"],
+                    latitude: "45.464664",
+                    longitude: "9.188540",
+                    altitude: "122",
+                },
+            ],
+        ),
+        (
+            "DE",
+            vec!["🇩🇪", "49", "Germany", "EUR", "Berlin"],
+            vec![
+                City {
+                    name: "Berlin",
+                    gmt: vec!["GMT+1", "GMT+2"],
+                    latitude: "52.520008",
+                    longitude: "13.404954",
+                    altitude: "34",
+                },
+                City {
+                    name: "Munich",
+                    gmt: vec!["GMT+1", "GMT+2"],
+                    latitude: "48.137154",
+                    longitude: "11.576124",
+                    altitude: "520",
+                },
+            ],
+        ),
+        (
+            "FR",
+            vec!["🇫🇷", "33", "France", "EUR", "Paris"],
+            vec![
+                City {
+                    name: "Paris",
+                    gmt: vec!["GMT+1", "GMT+2"],
+                    latitude: "48.8566",
+                    longitude: "2.3522",
+                    altitude: "35",
+                },
+                City {
+                    name: "Lyon",
+                    gmt: vec!["GMT+1", "GMT+2"],
+                    latitude: "45.763420",
+                    longitude: "4.834277",
+                    altitude: "105",
+                },
+            ],
+        ),
+    ];
+
+    // Example of inserting multiple countries
+    cm.insert_many(new_countries);
+    println!("After Inserting IT, DE and FR: {:?}", cm.retrieve());
+
+    // Sorting countries in ascending order by name
+    let sorted_asc = cm.sort_asc();
+    println!("Countries Sorted Ascending: {:?}", sorted_asc);
+
+    // Sorting countries in descending order by name
+    let sorted_desc = cm.sort_desc();
+    println!("Countries Sorted Descending: {:?}", sorted_desc);
+
+    // Example to retrieve details for Sudan
+    let name = cm.country_detail("SD", "name");
+    println!("Country Name: {}", name); // Output the name of the country
+    let flag = cm.country_detail("SD", "flag");
+    println!("Flag: {}", flag); // Output the flag of the country
+    let country_calling_code = cm.country_detail("SD", "calling_code");
+    println!("Calling Code: {}", country_calling_code); // Output the calling code
+    let capital = cm.country_detail("SD", "capital");
+    println!("Capital: {}", capital); // Output the name of the capital city of Sudan
+
+    // Retrieve the list of cities in Sudan
+    let cities = cm.country_detail("SD", "cities");
+    println!("Cities: {}", cities); // Output the list of cities in Sudan
+
+    // Example of retrieving city details for Omdurman in Sudan
+    let omdurman_details = cm.city_details("SD", "Omdurman");
+    println!("Omdurman Details: {}", omdurman_details); // Output the details for Omdurman
+
+    // Example of retrieving specific detail about Khartoum
+    let khartoum_gmt = cm.city_detail("SD", "Khartoum", "gmt"); // Example of retrieving GMT for Khartoum
+    let omdurman_altitude = cm.city_detail("SD", "Omdurman", "altitude"); // Example of retrieving altitude for Omdurman
+    let bahri_altitude = cm.city_detail("SD", "Khartoum Bahri", "altitude"); // Example of retrieving altitude for Khartoum Bahri
+
+    println!("Khartoum GMT: {}", khartoum_gmt);
+    println!("Omdurman Altitude: {}", omdurman_altitude);
+    println!("Khartoum Bahri Altitude: {}", bahri_altitude);
+
+    // Example of adding a new city to an existing country (Saudi Arabia - "SA")
+    let new_city = City {
+        name: "Dammam",
+        gmt: vec!["GMT+3"],
+        latitude: "26.4201",
+        longitude: "50.0888",
+        altitude: "5",
+    };
+
+    // Insert the new city into Saudi Arabia
+    cm.insert_one_city("SA", new_city);
+
+    // Retrieving the updated country details to see the new city (altitude = "5")
+    let updated_details_1 = cm.retrieve().get("SA").unwrap();
+    println!(
+        "Updated details (1) for Saudi Arabia: {:?}",
+        updated_details_1
+    );
+
+    // Example of adding multiple new cities to an existing country (Saudi Arabia - "SA")
+    let new_cities = vec![
+        City {
+            name: "Dammam",
+            gmt: vec!["GMT+3"],
+            latitude: "26.4201",
+            longitude: "50.0888",
+            altitude: "6",
+        },
+        City {
+            name: "Khobar",
+            gmt: vec!["GMT+3"],
+            latitude: "26.3040",
+            longitude: "50.1998",
+            altitude: "15",
+        },
+    ];
+
+    // Insert the new cities into Saudi Arabia
+    cm.insert_many_cities("SA", new_cities);
+
+    // Retrieving the updated country details to see the new added cities (Dammam: altitude = "6")
+    let updated_details_2 = cm.retrieve().get("SA").unwrap();
+    println!(
+        "Updated details (2) for Saudi Arabia: {:?}",
+        updated_details_2
+    );
+    println!("Current Countries: {:?}", cm.retrieve());
 
     // Fetching a country not in the database
     let invalid_country_code = "XYZ";
-    let invalid_details = country_details(invalid_country_code);
-    println!("Invalid Country Details: {}", invalid_details);  // Will print empty details in JSON format
+    let invalid_details = cm.country_details(invalid_country_code);
+    println!("Invalid Country Details: {}", invalid_details);
+
+    // Deletion examples
+
+    // 1. Delete a single city
+    cm.delete_one_city("SA", "Dammam");
+    println!(
+        "Cities after deleting Dammam: {:?}",
+        cm.retrieve().get("SA").unwrap().cities
+    );
+
+    // 2. Delete multiple cities
+    cm.delete_many_cities("SA", &["Khobar", "Jeddah"]);
+    println!(
+        "Cities after deleting Khobar and Jeddah: {:?}",
+        cm.retrieve().get("SA").unwrap().cities
+    );
+
+    // 3. Delete all cities
+    cm.delete_all_cities("SA");
+    println!(
+        "Cities after deleting all cities: {:?}",
+        cm.retrieve().get("SA").unwrap().cities
+    );
+
+    // Testing delete_one
+    cm.delete_one("FR");
+    println!("After Deleting FR: {:?}", cm.retrieve());
+
+    // Testing delete_many
+    cm.delete_many(&["IT", "DE"]);
+    println!("After Deleting IT and DE: {:?}", cm.retrieve());
+
+    // Testing delete_all
+    cm.delete_all();
+    println!("After Deleting All: {:?}", cm.retrieve());
 }
 ```
 
+#### Output
 
+```json
+Current Countries: {"DZ": Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }, "GB": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, "SD": Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, "SA": Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }] }, "BH": Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, "US": Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }, "UK": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, "CA": Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }}
+After Inserting FR: {"DZ": Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }, "GB": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, "SD": Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, "SA": Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }] }, "BH": Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, "FR": Details { flag: "🇫🇷", calling_code: "33", name: "France", currency: "EUR", capital: "Paris", cities: [City { name: "Paris", gmt: ["GMT+1", "GMT+2"], latitude: "48.8566", longitude: "2.3522", altitude: "35" }, City { name: "Lyon", gmt: ["GMT+1", "GMT+2"], latitude: "45.763420", longitude: "4.834277", altitude: "105" }] }, "US": Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }, "UK": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, "CA": Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }}
+After Inserting IT, DE and FR: {"DZ": Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }, "GB": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, "SD": Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, "SA": Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }] }, "BH": Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, "FR": Details { flag: "🇫🇷", calling_code: "33", name: "France", currency: "EUR", capital: "Paris", cities: [City { name: "Paris", gmt: ["GMT+1", "GMT+2"], latitude: "48.8566", longitude: "2.3522", altitude: "35" }, City { name: "Lyon", gmt: ["GMT+1", "GMT+2"], latitude: "45.763420", longitude: "4.834277", altitude: "105" }] }, "IT": Details { flag: "🇮🇹", calling_code: "39", name: "Italy", currency: "EUR", capital: "Rome", cities: [City { name: "Rome", gmt: ["GMT+1", "GMT+2"], latitude: "41.9028", longitude: "12.49637", altitude: "21" }, City { name: "Milan", gmt: ["GMT+1", "GMT+2"], latitude: "45.464664", longitude: "9.188540", altitude: "122" }] }, "DE": Details { flag: "🇩🇪", calling_code: "49", name: "Germany", currency: "EUR", capital: "Berlin", cities: [City { name: "Berlin", gmt: ["GMT+1", "GMT+2"], latitude: "52.520008", longitude: "13.404954", altitude: "34" }, City { name: "Munich", gmt: ["GMT+1", "GMT+2"], latitude: "48.137154", longitude: "11.576124", altitude: "520" }] }, "US": Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }, "UK": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, "CA": Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }}
+Countries Sorted Ascending: [Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }, Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }, Details { flag: "🇫🇷", calling_code: "33", name: "France", currency: "EUR", capital: "Paris", cities: [City { name: "Paris", gmt: ["GMT+1", "GMT+2"], latitude: "48.8566", longitude: "2.3522", altitude: "35" }, City { name: "Lyon", gmt: ["GMT+1", "GMT+2"], latitude: "45.763420", longitude: "4.834277", altitude: "105" }] }, Details { flag: "🇩🇪", calling_code: "49", name: "Germany", currency: "EUR", capital: "Berlin", cities: [City { name: "Berlin", gmt: ["GMT+1", "GMT+2"], latitude: "52.520008", longitude: "13.404954", altitude: "34" }, City { name: "Munich", gmt: ["GMT+1", "GMT+2"], latitude: "48.137154", longitude: "11.576124", altitude: "520" }] }, Details { flag: "🇮🇹", calling_code: "39", name: "Italy", currency: "EUR", capital: "Rome", cities: [City { name: "Rome", gmt: ["GMT+1", "GMT+2"], latitude: "41.9028", longitude: "12.49637", altitude: "21" }, City { name: "Milan", gmt: ["GMT+1", "GMT+2"], latitude: "45.464664", longitude: "9.188540", altitude: "122" }] }, Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }] }, Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }]
+Countries Sorted Descending: [Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }, Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }] }, Details { flag: "🇮🇹", calling_code: "39", name: "Italy", currency: "EUR", capital: "Rome", cities: [City { name: "Rome", gmt: ["GMT+1", "GMT+2"], latitude: "41.9028", longitude: "12.49637", altitude: "21" }, City { name: "Milan", gmt: ["GMT+1", "GMT+2"], latitude: "45.464664", longitude: "9.188540", altitude: "122" }] }, Details { flag: "🇩🇪", calling_code: "49", name: "Germany", currency: "EUR", capital: "Berlin", cities: [City { name: "Berlin", gmt: ["GMT+1", "GMT+2"], latitude: "52.520008", longitude: "13.404954", altitude: "34" }, City { name: "Munich", gmt: ["GMT+1", "GMT+2"], latitude: "48.137154", longitude: "11.576124", altitude: "520" }] }, Details { flag: "🇫🇷", calling_code: "33", name: "France", currency: "EUR", capital: "Paris", cities: [City { name: "Paris", gmt: ["GMT+1", "GMT+2"], latitude: "48.8566", longitude: "2.3522", altitude: "35" }, City { name: "Lyon", gmt: ["GMT+1", "GMT+2"], latitude: "45.763420", longitude: "4.834277", altitude: "105" }] }, Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }, Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }]
+Country Name: Sudan
+Flag: 🇸🇩
+Calling Code: 249
+Capital: Khartoum
+Cities: [{ "name": "Khartoum", "gmt": ["GMT+2"], "latitude": "15.5007", "longitude": "32.5599", "altitude": "385" }, { "name": "Omdurman", "gmt": ["GMT+2"], "latitude": "15.6866", "longitude": "32.4752", "altitude": "375" }, { "name": "Khartoum Bahri", "gmt": ["GMT+2"], "latitude": "15.6151", "longitude": "32.552", "altitude": "360" }]
+Omdurman Details: { "name": "Omdurman", "gmt": ["GMT+2"], "latitude": "15.6866", "longitude": "32.4752", "altitude": "375" }
+Khartoum GMT: GMT+2
+Omdurman Altitude: 375
+Khartoum Bahri Altitude: 360
+Updated details (1) for Saudi Arabia: Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }, City { name: "Dammam", gmt: ["GMT+3"], latitude: "26.4201", longitude: "50.0888", altitude: "5" }] }
+Updated details (2) for Saudi Arabia: Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }, City { name: "Dammam", gmt: ["GMT+3"], latitude: "26.4201", longitude: "50.0888", altitude: "6" }, City { name: "Khobar", gmt: ["GMT+3"], latitude: "26.3040", longitude: "50.1998", altitude: "15" }] }
+Current Countries: {"DZ": Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }, "GB": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, "SD": Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, "SA": Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }, City { name: "Dammam", gmt: ["GMT+3"], latitude: "26.4201", longitude: "50.0888", altitude: "6" }, City { name: "Khobar", gmt: ["GMT+3"], latitude: "26.3040", longitude: "50.1998", altitude: "15" }] }, "BH": Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, "FR": Details { flag: "🇫🇷", calling_code: "33", name: "France", currency: "EUR", capital: "Paris", cities: [City { name: "Paris", gmt: ["GMT+1", "GMT+2"], latitude: "48.8566", longitude: "2.3522", altitude: "35" }, City { name: "Lyon", gmt: ["GMT+1", "GMT+2"], latitude: "45.763420", longitude: "4.834277", altitude: "105" }] }, "IT": Details { flag: "🇮🇹", calling_code: "39", name: "Italy", currency: "EUR", capital: "Rome", cities: [City { name: "Rome", gmt: ["GMT+1", "GMT+2"], latitude: "41.9028", longitude: "12.49637", altitude: "21" }, City { name: "Milan", gmt: ["GMT+1", "GMT+2"], latitude: "45.464664", longitude: "9.188540", altitude: "122" }] }, "DE": Details { flag: "🇩🇪", calling_code: "49", name: "Germany", currency: "EUR", capital: "Berlin", cities: [City { name: "Berlin", gmt: ["GMT+1", "GMT+2"], latitude: "52.520008", longitude: "13.404954", altitude: "34" }, City { name: "Munich", gmt: ["GMT+1", "GMT+2"], latitude: "48.137154", longitude: "11.576124", altitude: "520" }] }, "US": Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }, "UK": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, "CA": Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }}
+Invalid Country Details: { "flag": "", "calling_code": "", "name": "", "capital": "", "currency": "", "cities": [] }
+Cities after deleting Dammam: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }, City { name: "Jeddah", gmt: ["GMT+3"], latitude: "21.2854", longitude: "39.2376", altitude: "12" }, City { name: "Khobar", gmt: ["GMT+3"], latitude: "26.3040", longitude: "50.1998", altitude: "15" }]
+Cities after deleting Khobar and Jeddah: [City { name: "Riyadh", gmt: ["GMT+3"], latitude: "24.7136", longitude: "46.6753", altitude: "612" }]
+Cities after deleting all cities: []
+After Deleting FR: {"DZ": Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }, "GB": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, "SD": Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, "SA": Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [] }, "BH": Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, "IT": Details { flag: "🇮🇹", calling_code: "39", name: "Italy", currency: "EUR", capital: "Rome", cities: [City { name: "Rome", gmt: ["GMT+1", "GMT+2"], latitude: "41.9028", longitude: "12.49637", altitude: "21" }, City { name: "Milan", gmt: ["GMT+1", "GMT+2"], latitude: "45.464664", longitude: "9.188540", altitude: "122" }] }, "DE": Details { flag: "🇩🇪", calling_code: "49", name: "Germany", currency: "EUR", capital: "Berlin", cities: [City { name: "Berlin", gmt: ["GMT+1", "GMT+2"], latitude: "52.520008", longitude: "13.404954", altitude: "34" }, City { name: "Munich", gmt: ["GMT+1", "GMT+2"], latitude: "48.137154", longitude: "11.576124", altitude: "520" }] }, "US": Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }, "UK": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, "CA": Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }}
+After Deleting IT and DE: {"DZ": Details { flag: "🇩🇿", calling_code: "213", name: "Algeria", currency: "DZD", capital: "Algiers", cities: [City { name: "Algiers", gmt: ["GMT+1"], latitude: "36.737232", longitude: "3.086472", altitude: "424" }, City { name: "Oran", gmt: ["GMT+1"], latitude: "35.69694440", longitude: "0.63305560", altitude: "0.9" }] }, "GB": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Manchester", gmt: ["GMT+0", "GMT+1"], latitude: "53.4808", longitude: "-2.2426", altitude: "38" }] }, "SD": Details { flag: "🇸🇩", calling_code: "249", name: "Sudan", currency: "SDG", capital: "Khartoum", cities: [City { name: "Khartoum", gmt: ["GMT+2"], latitude: "15.5007", longitude: "32.5599", altitude: "385" }, City { name: "Omdurman", gmt: ["GMT+2"], latitude: "15.6866", longitude: "32.4752", altitude: "375" }, City { name: "Khartoum Bahri", gmt: ["GMT+2"], latitude: "15.6151", longitude: "32.552", altitude: "360" }] }, "SA": Details { flag: "🇸🇦", calling_code: "966", name: "Saudi Arabia", currency: "SAR", capital: "Riyadh", cities: [] }, "BH": Details { flag: "🇧🇭", calling_code: "973", name: "Bahrain", currency: "BHD", capital: "Manama", cities: [City { name: "Manama", gmt: ["GMT+3"], latitude: "26.22787", longitude: "50.58565", altitude: "10" }, City { name: "Riffa", gmt: ["GMT+3"], latitude: "26.129999", longitude: "50.555000", altitude: "15" }] }, "US": Details { flag: "🇺🇸", calling_code: "1", name: "United States", currency: "USD", capital: "Washington, D.C.", cities: [City { name: "Washington, D.C.", gmt: ["GMT-5", "GMT-4"], latitude: "38.89511", longitude: "-77.03637", altitude: "125" }, City { name: "New York", gmt: ["GMT-5", "GMT-4"], latitude: "40.730610", longitude: "-73.935242", altitude: "10" }] }, "UK": Details { flag: "🇬🇧", calling_code: "44", name: "United Kingdom", currency: "GBP", capital: "London", cities: [City { name: "London", gmt: ["GMT+0", "GMT+1"], latitude: "51.509865", longitude: "-0.118092", altitude: "24" }, City { name: "Birmingham", gmt: ["GMT+0", "GMT+1"], latitude: "52.4862", longitude: "-1.8904", altitude: "150" }] }, "CA": Details { flag: "🇨🇦", calling_code: "1", name: "Canada", currency: "CAD", capital: "Ottawa", cities: [City { name: "Ottawa", gmt: ["GMT-5", "GMT-4"], latitude: "45.4215", longitude: "-75.6972", altitude: "70" }, City { name: "Toronto", gmt: ["GMT-5", "GMT-4"], latitude: "43.65107", longitude: "-79.347015", altitude: "76.5" }] }}
+After Deleting All: {}
+```
 
 ## Documentation
 
