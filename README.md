@@ -29,7 +29,7 @@
 
 The **CANS** templating engine is an elegant and efficient solution developed in Rust, designed for developers who prioritize simplicity and type safety. This crate allows you to create dynamic web pages and applications with minimal boilerplate code, ensuring that your templates are easy to read and maintain.
 
-While **CANS** is optimized for seamless integration with the [GetPost](https://crates.io/crates/getpost) framework, it also provides the flexibility to work with any framework or content type, making it a versatile choice for a wide range of projects.
+While **CANS** is optimized for seamless integration with the [Fluxor](https://crates.io/crates/fluxor) framework, it also provides the flexibility to work with any framework or content type, making it a versatile choice for a wide range of projects.
 
 ## Changelog
 
@@ -166,6 +166,85 @@ fn main() {
     let forloop_float = do_forloop(&float_vector, "", "", "", "");
     println!("{}", forloop_float);
     // Output: 123
+}
+```
+
+### MIME Module
+
+The **MIME** module in the `cans` crate provides functionalities for handling MIME types, which are essential for identifying and processing various types of files, such as HTML documents, images, and multimedia content. This module facilitates the identification, validation, and management of different MIME types used across the web, providing features such as:
+
+- **MIME Type Detection**: Automatically determine the MIME type of a file based on its extension or content.
+- **Type Validation**: Check if a specific MIME type is valid.
+- **Extension Retrieval**: Retrieve file extensions associated with given MIME types.
+- **Custom MIME Types**: Register and manage custom MIME types to suit specific requirements.
+
+```rust
+use cans::mime::{
+    display_mime_types,
+    insert_mime_types,
+    manage_mime_types,
+    remove_mime_types,
+    set_mime_types
+};
+
+fn main() {
+   // Create a new HashMap and initialize it with default MIME types
+   let mut mime_types = set_mime_types();
+   
+   println!("Initial MIME types:");
+   display_mime_types(&mime_types);
+    
+    // Display the default count of MIME types
+    println!("The default length of MIME types: {}", mime_types.len()); // Example output: 113
+    // Define an array of tuples for both already included and new MIME types
+    let included_mime_types = manage_mime_types(&[
+        // Already included MIME types
+        ("html", "text/html"),
+        ("css", "text/css"),
+        ("js", "application/javascript"),
+        ("svg", "image/svg+xml"),
+        ("gif", "image/gif"),
+        ("jpg", "image/jpeg"),
+        ("txt", "text/plain"),
+        ("json", "application/json"),
+        // New MIME type to include
+        ("some_ext", "some_mime"),
+    ]);
+    // Insert new MIME types into the existing HashMap
+    insert_mime_types(&mut mime_types, included_mime_types);
+    // Display the length after insertion
+    println!(
+        "The length after inserting MIME types: {}",
+        mime_types.len() // Example output: 114
+    );
+    // Display the updated MIME types
+    println!("\nAfter inserting MIME types:");
+    display_mime_types(&mime_types);
+
+    // Define an array of tuples for both pre-existing and new MIME types
+    let excluded_mime_types = manage_mime_types(&[
+        // Pre-existing MIME types by default
+        ("html", "text/html"),
+        ("css", "text/css"),
+        ("js", "application/javascript"),
+        ("svg", "image/svg+xml"),
+        ("gif", "image/gif"),
+        ("jpg", "image/jpeg"),
+        ("txt", "text/plain"),
+        ("json", "application/json"),
+        // New MIME type that is not part of the default list
+        ("some_ext", "some_mime"),
+    ]);
+    // Attempt to remove MIME types from the existing HashMap
+    remove_mime_types(&mut mime_types, excluded_mime_types);
+    // Display the length after removal
+    println!(
+        "The length after removing MIME types: {}",
+        mime_types.len() // Example output: 105
+    );
+    // Display the updated MIME types
+    println!("\nAfter removing MIME types:");
+    display_mime_types(&mime_types);
 }
 ```
 

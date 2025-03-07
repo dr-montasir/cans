@@ -1,3 +1,8 @@
+### v1.1.0
+
+- Added tests for the MIME module.
+- Improved the documentation.
+
 ### v1.0.0
 
 - Added a tests module to improve unit testing and coverage.

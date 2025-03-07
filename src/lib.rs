@@ -1,7 +1,5 @@
-#![doc(
-    html_logo_url = "https://github.com/dr-montasir/cans/raw/HEAD/cans-logo.svg?sanitize=true",
-    html_root_url = "https://docs.rs/cans/latest/cans"
-)]
+#![doc(html_logo_url = "https://github.com/dr-montasir/cans/raw/HEAD/cans-logo.svg")]
+#![doc = r"<div align='center'><a href='https://github.com/dr-montasir/cans' target='_blank'><img src='https://github.com/dr-montasir/cans/raw/HEAD/cans-logo.svg' alt='CANS' width='80' height='auto' /></a><br><a href='https://github.com/dr-montasir/cans' target='_blank'>CANS</a><br><br><b>An elegant and lightweight Rust-based literal template engine for managing web content, enhanced with a world module for streamlined regional and city information, as well as robust MIME type management.</b></div>"]
 
 /// An elegant and lightweight Rust-based literal template engine for managing web content,
 /// enhanced with a world module for streamlined regional and city information,
