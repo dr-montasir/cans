@@ -1,3 +1,8 @@
+### v1.2.0
+
+- Added alpine function.
+- Improved the documentation.
+
 ### v1.1.0
 
 - Added tests for the MIME module.

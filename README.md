@@ -66,10 +66,11 @@ CANS provides robust support for templating, including support for handling HTML
 ### Example: Using the do_html Macro
 
 ```rust
-use cans::html::{do_html, do_text};
+use cans::html::{do_html, do_text, alpine};
 
 pub const HEAD: &str = r#"<head>
 <meta charset="UTF-8">
+    {{alpinejs}}
     <title>{{page_title}} Page</title>
 </head>"#;
 
@@ -77,20 +78,36 @@ pub const HOME_TEMPLATE: &str = r#"<!DOCTYPE html>
 <html>
   {{HEAD}}
   <body>
-     Home Page
+    <h1>Home Page</h1>
+    <div x-data="{ open: false }">
+        <button x-show="!open" @click="open = true">Show</button>
+        <button x-show="open" @click="open = false">Hide</button>
+        <span x-show="open">
+            CANS template with Alpine.js
+        </span>
+    </div>
   </body>
 </html>"#;
 
 pub fn do_home_page() -> String {
-    do_html!(HOME_TEMPLATE, HEAD = HEAD, page_title = do_text("Home"))
+    // Alpine version, e.g., "3.15.0" or "latest" for the most recent version.
+    do_html!(HOME_TEMPLATE, HEAD = HEAD, alpinejs = alpine("latest"), page_title = do_text("Home"))
 }
 
 pub const ABOUT_TEMPLATE: &str = r#"<!DOCTYPE html>
 <html>
   {{HEAD}}
   <body>
-     <p>About Page</p>
-     {{component_if}}
+    <h1>About Page</h1>
+    <p>
+        {{component_if}}
+    </p>
+
+    <div x-data="{ count: 0 }">
+        <button x-on:click="count--">Decrement</button>
+        <span x-text="count"></span>
+        <button x-on:click="count++">Increment</button>
+    </div>
   </body>
 </html>"#;
 
@@ -109,6 +126,8 @@ pub fn do_about_page() -> String {
     do_html!(
         ABOUT_TEMPLATE,
         HEAD = HEAD,
+        // Alpine version "3.10.0"
+        alpinejs = alpine("3.10.0"),
         page_title = do_text("About"),
         component_if = component_if,
         x = x // x must be defined after component_if.
@@ -129,27 +148,48 @@ fn main() {
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
+<meta charset="UTF-8">
+    <script src="https://unpkg.com/alpinejs@latest/dist/cdn.min.js" defer></script>
     <title>Home Page</title>
-  </head>
+</head>
   <body>
-    Home Page
+    <h1>Home Page</h1>
+    <div x-data="{ open: false }">
+        <button x-show="!open" @click="open = true">Show</button>
+        <button x-show="open" @click="open = false">Hide</button>
+        <span x-show="open">
+            CANS template with Alpine.js
+        </span>
+    </div>
   </body>
 </html>
+```
 
+```html
 <!-- about page output -->
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
+<meta charset="UTF-8">
+    <script src="https://unpkg.com/alpinejs@3.10.0/dist/cdn.min.js" defer></script>
     <title>About Page</title>
-  </head>
+</head>
   <body>
-    <p>About Page</p>
-    <a href="#"><i>x ≠ 1 & x ≠ 2. The 'x' value is ( 3 )</i></a>
+    <h1>About Page</h1>
+    <p>
+        <a href="#"><i>x ≠ 1 & x  ≠ 2. The 'x' value is ( 3 )</i></a>
+    </p>
+
+    <div x-data="{ count: 0 }">
+        <button x-on:click="count--">Decrement</button>
+        <span x-text="count"></span>
+        <button x-on:click="count++">Increment</button>
+    </div>
   </body>
 </html>
 ```
+
+
 
 ### Example: Using the do_forloop Function
 

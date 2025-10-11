@@ -114,3 +114,45 @@ pub fn do_forloop<T: std::fmt::Display>(
 pub fn do_text(t: &str) -> String {
     t.to_string()
 }
+
+/// ### alpine(version)
+///
+/// Alpine.js Script Tag Generator
+///
+/// The `alpine` function generates an HTML `<script>` tag string that loads the specified version
+/// of the Alpine.js library from a CDN. You provide the version as a string slice, and the function
+/// returns a formatted string containing the script tag with the correct version embedded.
+///
+/// ### Parameters
+/// - `version`: A string slice (`&str`) representing the version of Alpine.js to include,
+///   for example `"3.15.0"` or `"latest"` for the most recent version.
+///
+/// ### Examples
+/// ```rust
+/// use cans::html::alpine;
+///
+/// let script_tag = alpine("3.15.0");
+/// assert_eq!(script_tag, r#"<script src="https://unpkg.com/alpinejs@3.15.0/dist/cdn.min.js" defer></script>"#);
+///
+/// let latest_script_tag = alpine("latest");
+/// assert_eq!(latest_script_tag, r#"<script src="https://unpkg.com/alpinejs@latest/dist/cdn.min.js" defer></script>"#);
+/// ```
+///
+/// ### Usage Context
+/// This function is useful when dynamically generating HTML pages or templates that need to include
+/// the Alpine.js library. By passing in the desired version, you can easily control which version
+/// of Alpine is loaded, facilitating version management and updates in your web projects.
+///
+/// For example, in a server-side rendered HTML template:
+/// ```rust
+/// use cans::html::alpine;
+/// let head_content = format!("<head>{}", alpine("3.15.0"));
+/// ```
+///
+/// This ensures the correct script tag is embedded in the HTML, enabling Alpine.js functionalities.
+///
+/// <small>End Fun Doc</small>
+pub fn alpine(version: &str) -> String {
+    let script = format!(r#"<script src="https://unpkg.com/alpinejs@{}/dist/cdn.min.js" defer></script>"#, version);
+    script.to_string()
+}
