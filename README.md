@@ -5,7 +5,7 @@
   </a>
   <br>
 
-[<img alt="github" src="https://img.shields.io/badge/github-dr%20montasir%20/%20cans-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="22">](https://github.com/dr-montasir/cans)[<img alt="crates.io" src="https://img.shields.io/crates/v/cans.svg?style=for-the-badge&color=fc8d62&logo=rust" height="22">](https://crates.io/crates/cans)[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-cans-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="22">](https://docs.rs/cans)[<img alt="license" src="https://img.shields.io/badge/license-apache_2.0-4a98f7.svg?style=for-the-badge&labelColor=555555&logo=apache" height="22">](https://choosealicense.com/licenses/apache-2.0)
+[<img alt="github" src="https://img.shields.io/badge/github-dr%20montasir%20/%20cans-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="22">](https://github.com/dr-montasir/cans)[<img alt="crates.io" src="https://img.shields.io/crates/v/cans.svg?style=for-the-badge&color=fc8d62&logo=rust" height="22">](https://crates.io/crates/cans)[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-cans-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="22">](https://docs.rs/cans)[<img alt="license" src="https://img.shields.io/badge/license-apache_2.0-4a98f7.svg?style=for-the-badge&labelColor=555555&logo=apache" height="22">](https://choosealicense.com/licenses/apache-2.0)[<img alt="downloads" src="https://img.shields.io/crates/d/cans.svg?style=for-the-badge&labelColor=555555&logo=&color=428600" height="22">](https://crates.io/crates/cans)
 
   <h1>CANS</h1>
 
@@ -61,12 +61,33 @@ cans = "MAJOR.MINOR.PATCH" # Replace with the latest version
 
 ### Template
 
-CANS provides robust support for templating, including support for handling HTML, looping through collections, and rendering text. Below are some examples demonstrating how to use the `do_html` macro, the `do_forloop` macro, and the `do_text` function.
+CANS provides robust support for templating, including support for handling HTML, looping through collections, and rendering text. Below are some examples demonstrating how to use the (`do_replace`, `do_html`, ``do_xml`, `do_json` macros, the `do_forloop`, and the `do_text` functions.
+
+CANS provides robust support for templating, including handling various content types, looping through collections, and rendering text. Below are some examples demonstrating how to use the (`do_replace`, `do_html`, `do_xml`, `do_json`) macros, as well as the `do_forloop` and `do_text` functions.
+
+The `do_replace` macro takes any content string or data (e.g., code, file content, templates) along with key-value pairs and replaces placeholders in the content (formatted as `{{key}}`) with the corresponding values. This macro is highly versatile and can manipulate any content of any programming language or file by substituting placeholders.
+
+Macros for specific content types can be defined by wrapping `do_replace!`.
+For example, to create a macro for CSS content:
+
+```rust
+// use cans::content::do_replace;
+use cans::do_replace;
+
+#[macro_export]
+macro_rules! do_css {
+    ($content:expr, $($key:ident = $val:expr),*) => {
+        $crate::do_replace!($content, $($key = $val),*)
+    };
+}
+```
+
+Now, `do_css!` can be used to easily replace placeholders in CSS templates.
 
 ### Example: Using the do_html Macro
 
 ```rust
-use cans::html::{do_html, do_text, alpine};
+use cans::content::{do_html, do_text, alpine};
 
 pub const HEAD: &str = r#"<head>
 <meta charset="UTF-8">
@@ -189,12 +210,10 @@ fn main() {
 </html>
 ```
 
-
-
 ### Example: Using the do_forloop Function
 
 ```rust
-use cans::html::do_forloop;
+use cans::content::do_forloop;
 
 fn main() {
     let items = vec!["Apple", "Banana", "Cherry"];
@@ -207,6 +226,28 @@ fn main() {
     println!("{}", forloop_float);
     // Output: 123
 }
+```
+
+### Example: Using the do_xml macro
+
+```rust
+// use cans::content::do_xml;
+use cans::do_xml;
+
+let xml_content = "<note><to>{{recipient}}</to></note>";
+let xml_result = do_xml!(xml_content, recipient = "Ahmed");
+assert_eq!(xml_result, "<note><to>Ahmed</to></note>");
+```
+
+### Example: Using the do_json macro
+
+```rust
+// use cans::content::do_json;
+use cans::do_json;
+
+let json_content = r##"{"greeting": "{{greeting}}", "name": "{{name}}"}"##;
+let json_result = do_json!(json_content, greeting = "Hi", name = "Ahmed");
+assert_eq!(json_result, r##"{"greeting": "Hi", "name": "Ahmed"}"##);
 ```
 
 ### MIME Module

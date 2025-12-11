@@ -1,3 +1,12 @@
+### v1.3.0
+
+- Changed html module name to content (use cans::html::do_html; ==> use cans::content::do_html;).
+- Added do_replace macro.
+- Added do_xml macro.
+- Added do_json macro.
+- Added do_json_forloop function
+- Improved the documentation.
+
 ### v1.2.0
 
 - Added alpine function.

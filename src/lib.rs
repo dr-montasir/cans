@@ -7,8 +7,8 @@
 ///
 /// ### HTML Module
 ///
-/// A set of functions and macros for generating and manipulating HTML content.
-pub mod html;
+/// A set of functions and macros for generating and manipulating various content.
+pub mod content;
 
 /// ### Mime Module
 ///

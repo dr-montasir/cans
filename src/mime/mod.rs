@@ -10,6 +10,7 @@ use std::collections::HashMap;
 /// list of common file extensions and their recognized types.
 ///
 /// ### Returns
+/// 
 /// - Returns a `HashMap<String, String>` containing common file extensions as keys
 ///   and their corresponding MIME types as values.
 ///
@@ -42,6 +43,7 @@ use std::collections::HashMap;
 /// ```
 ///
 /// ### Usage Context
+/// 
 /// This function is typically called at the start of an application to establish
 /// default MIME type mappings, ensuring that subsequent operations on file types
 /// can utilize a reliable set of MIME definitions.
@@ -202,10 +204,12 @@ pub fn set_mime_types() -> HashMap<String, String> {
 /// easier to insert or remove MIME type mappings as needed.
 ///
 /// ### Parameters
+/// 
 /// - `mime_types`: A slice of tuples, where each tuple contains a file extension
 ///   and its respective MIME type.
 ///
 /// ### Returns
+/// 
 /// - Returns a `HashMap<String, String>` containing the provided file extensions
 ///   as keys and their corresponding MIME types as values.
 ///
@@ -226,11 +230,13 @@ pub fn manage_mime_types(mime_types: &[(&str, &str)]) -> HashMap<String, String>
 /// this function can be used to add new entries as needed.
 ///
 /// ### Parameters
+/// 
 /// - `mime_types`: A mutable reference to a `HashMap<String, String>` of MIME types.
 /// - `extension`: A string slice (`&str`) representing the file extension to be added.
 /// - `mime_type`: A string slice (`&str`) representing the corresponding MIME type.
 ///
 /// ### Examples
+/// 
 /// ```rust
 /// use cans::mime::{
 ///     display_mime_types,
@@ -260,6 +266,7 @@ pub fn manage_mime_types(mime_types: &[(&str, &str)]) -> HashMap<String, String>
 /// ```
 ///
 /// ### Usage Context
+/// 
 /// This function can be useful when dealing with custom file types or when extending
 /// the MIME type definitions beyond the defaults provided in `set_mime_types`.
 ///
@@ -281,10 +288,12 @@ pub fn insert_mime_type(
 /// of MIME type definitions as the application evolves.
 ///
 /// ### Parameters
+/// 
 /// - `mime_types`: A mutable reference to a `HashMap<String, String>` of MIME types.
 /// - `extension`: A string slice (`&str`) representing the file extension to remove.
 ///
 /// ### Examples
+/// 
 /// ```rust
 /// use cans::mime::{
 ///     display_mime_types,
@@ -306,8 +315,9 @@ pub fn insert_mime_type(
 ///    display_mime_types(&mime_types);
 /// }
 /// ```
-///
+/// 
 /// ### Usage Context
+/// 
 /// This function is essential for scenarios where certain MIME types need to be
 /// deprecated or removed from the active listings, ensuring that the application
 /// stays up-to-date with the current file typing needs.
@@ -327,12 +337,14 @@ pub fn remove_mime_type(mime_types: &mut HashMap<String, String>, extension: &st
 /// addition of multiple entries at once.
 ///
 /// ### Parameters
+///
 /// - `mime_types`: A mutable reference to an existing `HashMap<String, String>`
 ///   that will receive new MIME type entries.
 /// - `mime_types_map`: A `HashMap<String, String>` containing MIME type entries
 ///   to be inserted into the existing `mime_types` HashMap.
 ///
 /// ### Examples
+/// 
 /// ```rust
 /// use cans::mime::{
 ///     display_mime_types,
@@ -340,38 +352,38 @@ pub fn remove_mime_type(mime_types: &mut HashMap<String, String>, extension: &st
 ///     manage_mime_types,
 ///     set_mime_types,
 /// };
-///
+/// 
 /// fn main() {
-///     // Create a new HashMap and initialize it with default MIME types
-///     let mut mime_types = set_mime_types();
-///
-///     // Display the default count of MIME types
-///     println!("The default length of MIME types: {}", mime_types.len()); // Example output: 113
-///
-///     // Define an array of tuples for both already included and new MIME types
-///     let included_mime_types = manage_mime_types(&[
-///         // Already included MIME types
-///         ("html", "text/html"),
-///         ("css", "text/css"),
-///         ("js", "application/javascript"),
-///         ("svg", "image/svg+xml"),
-///         ("gif", "image/gif"),
-///         ("jpg", "image/jpeg"),
-///         ("txt", "text/plain"),
-///         ("json", "application/json"),
-///         // New MIME type to include
-///         ("some_ext", "some_mime"),
-///     ]);
-///
-///     // Insert new MIME types into the existing HashMap
-///     insert_mime_types(&mut mime_types, included_mime_types);
-///
-///     // Display the length after insertion
-///     println!(
-///         "The length after inserting MIME types: {}",
-///         mime_types.len() // Example output: 114
-///     );
-///
+///      // Create a new HashMap and initialize it with default MIME types
+///      let mut mime_types = set_mime_types();
+/// 
+///      // Display the default count of MIME types
+///      println!("The default length of MIME types: {}", mime_types.len()); // Example output: 113
+/// 
+///      // Define an array of tuples for both already included and new MIME types
+///      let included_mime_types = manage_mime_types(&[
+///          // Already included MIME types
+///          ("html", "text/html"),
+///          ("css", "text/css"),
+///          ("js", "application/javascript"),
+///          ("svg", "image/svg+xml"),
+///          ("gif", "image/gif"),
+///          ("jpg", "image/jpeg"),
+///          ("txt", "text/plain"),
+///          ("json", "application/json"),
+///          // New MIME type to include
+///          ("some_ext", "some_mime"),
+///      ]);
+/// 
+///      // Insert new MIME types into the existing HashMap
+///      insert_mime_types(&mut mime_types, included_mime_types);
+/// 
+///      // Display the length after insertion
+///      println!(
+///          "The length after inserting MIME types: {}",
+///          mime_types.len() // Example output: 114
+///      );
+/// 
 ///     // Display the updated MIME types
 ///     println!("\nAfter inserting MIME types:");
 ///     display_mime_types(&mime_types);
@@ -379,6 +391,7 @@ pub fn remove_mime_type(mime_types: &mut HashMap<String, String>, extension: &st
 /// ```
 ///
 /// ### Usage Context
+/// 
 /// This function is particularly useful when there is a need to bulk-add MIME types
 /// from a predefined list or configuration. It simplifies the process of extending
 /// the supported MIME types within an application, improving maintainability and
@@ -404,12 +417,14 @@ pub fn insert_mime_types(
 /// and relevant as they evolve.
 ///
 /// ### Parameters
+/// 
 /// - `mime_types`: A mutable reference to a `HashMap<String, String>` containing
 ///   MIME types, from which entries will be removed.
 /// - `mime_types_map`: A `HashMap<String, String>` where the keys represent
 ///   the file extensions to be removed from the existing `mime_types` HashMap.
 ///
 /// ### Examples
+/// 
 /// ```rust
 /// use cans::mime::{
 ///     display_mime_types,
@@ -456,6 +471,7 @@ pub fn insert_mime_types(
 /// ```
 ///
 /// ### Usage Context
+/// 
 /// This function is particularly useful in scenarios where multiple MIME types
 /// need to be deprecated or removed in a single operation. It helps maintain an
 /// organized and relevant collection of MIME type definitions, ensuring application
@@ -480,6 +496,7 @@ pub fn remove_mime_types(
 /// extension and the associated MIME type in a human-readable format.
 ///
 /// ### Parameters
+/// 
 /// - `mime_types`: A reference to a `HashMap<String, String>`, which contains
 ///   mappings of file extensions to their corresponding MIME types.
 ///
@@ -503,6 +520,7 @@ pub fn remove_mime_types(
 /// ```
 ///
 /// ### Notes
+/// 
 /// - Ensure that the `mime_types` HashMap is not empty to see any output.
 /// - This function is intended for display purposes and does not modify the input HashMap.
 ///

@@ -1,4 +1,7 @@
+pub use crate::do_replace;
 pub use crate::do_html;
+pub use crate::do_xml;
+pub use crate::do_json;
 
 /// ### do_forloop(vector, befor_items, befor_item, after_item, after_items)
 ///
@@ -18,7 +21,7 @@ pub use crate::do_html;
 ///
 /// ### Examples
 /// ```rust
-/// use cans::html::do_forloop;
+/// use cans::content::do_forloop;
 ///
 /// let items = vec!["Apples", "Bananas", "Cherries"];
 /// let result = do_forloop(&items, "<ul>", "<li>", "</li>", "</ul>");
@@ -59,7 +62,7 @@ pub fn do_forloop<T: std::fmt::Display>(
 ///
 /// ### Examples
 /// ```rust
-/// use cans::html::do_text;
+/// use cans::content::do_text;
 ///
 /// let title = "Home";
 /// let result = do_text(title);
@@ -75,7 +78,7 @@ pub fn do_forloop<T: std::fmt::Display>(
 /// of an HTML document or template. For instance, it is used in the `do_home_page`
 /// function to set the title in the `HOME_TEMPLATE` HTML document:
 /// ```rust
-/// use cans::html::{do_html, do_text};
+/// use cans::content::{do_html, do_text};
 ///
 /// pub const HEAD: &str = r#"<head>
 /// <meta charset="UTF-8">
@@ -129,7 +132,7 @@ pub fn do_text(t: &str) -> String {
 ///
 /// ### Examples
 /// ```rust
-/// use cans::html::alpine;
+/// use cans::content::alpine;
 ///
 /// let script_tag = alpine("3.15.0");
 /// assert_eq!(script_tag, r#"<script src="https://unpkg.com/alpinejs@3.15.0/dist/cdn.min.js" defer></script>"#);
@@ -145,7 +148,7 @@ pub fn do_text(t: &str) -> String {
 ///
 /// For example, in a server-side rendered HTML template:
 /// ```rust
-/// use cans::html::alpine;
+/// use cans::content::alpine;
 /// let head_content = format!("<head>{}", alpine("3.15.0"));
 /// ```
 ///
