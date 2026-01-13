@@ -1,3 +1,9 @@
+### v1.4.0
+
+- Added the chart_js function.
+- Updated the alpine function.
+- Fixed the warning in the remove_mime_type function.
+
 ### v1.3.0
 
 - Changed html module name to content (use cans::html::do_html; ==> use cans::content::do_html;).

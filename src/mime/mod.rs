@@ -296,7 +296,6 @@ pub fn insert_mime_type(
 /// 
 /// ```rust
 /// use cans::mime::{
-///     display_mime_types,
 ///     remove_mime_type,
 ///     set_mime_types,
 /// };
@@ -304,6 +303,14 @@ pub fn insert_mime_type(
 /// let mut mime_types = set_mime_types();
 /// remove_mime_type(&mut mime_types, "html");
 /// assert_eq!(mime_types.get("html"), None);
+/// ```
+/// 
+/// ```rust
+/// use cans::mime::{
+///     display_mime_types,
+///     remove_mime_type,
+///     set_mime_types,
+/// };
 ///
 /// fn main() {
 ///    // Create a new HashMap and initialize it with default MIME types
@@ -342,8 +349,6 @@ pub fn remove_mime_type(mime_types: &mut HashMap<String, String>, extension: &st
 ///   that will receive new MIME type entries.
 /// - `mime_types_map`: A `HashMap<String, String>` containing MIME type entries
 ///   to be inserted into the existing `mime_types` HashMap.
-///
-/// ### Examples
 /// 
 /// ```rust
 /// use cans::mime::{
