@@ -1,3 +1,7 @@
+### v1.5.0
+
+- Updated the chart_js function.
+
 ### v1.4.0
 
 - Added the chart_js function.

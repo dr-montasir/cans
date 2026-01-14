@@ -175,11 +175,11 @@ pub fn alpine(version: &str) -> String {
 /// ```rust
 /// use cans::content::chart_js;
 ///
-/// let script_tag = chart_js("4.2.1", false);
+/// let script_tag = chart_js("4.2.1");
 /// assert_eq!(script_tag, r#"<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>"#);
 ///
-/// let latest_script_tag = chart_js("latest", true);
-/// assert_eq!(latest_script_tag, r#"<script defer src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/chart.umd.min.js"></script>"#);
+/// let latest_script_tag = chart_js("latest");
+/// assert_eq!(latest_script_tag, r#"<script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/chart.umd.min.js"></script>"#);
 /// ```
 ///
 /// ### Usage Context
@@ -190,16 +190,12 @@ pub fn alpine(version: &str) -> String {
 /// For example, in a server-side rendered HTML template:
 /// ```rust
 /// use cans::content::chart_js;
-/// let head_content = format!("<head>{}", chart_js("4.2.1", false));
+/// let head_content = format!("<head>{}</head>", chart_js("4.2.1"));
 /// ```
 ///
 /// This ensures the correct script tag is embedded in the HTML, enabling Chart.js functionalities.
 ///
 /// <small>End Fun Doc</small>
-pub fn chart_js(version: &str, defer: bool) -> String {
-    if defer {
-        format!(r#"<script defer src="https://cdn.jsdelivr.net/npm/chart.js@{}/dist/chart.umd.min.js"></script>"#, version)
-    } else {
-        format!(r#"<script src="https://cdn.jsdelivr.net/npm/chart.js@{}/dist/chart.umd.min.js"></script>"#, version)
-    }
+pub fn chart_js(version: &str) -> String {
+    format!(r#"<script src="https://cdn.jsdelivr.net/npm/chart.js@{}/dist/chart.umd.min.js"></script>"#, version)
 }
